@@ -481,68 +481,195 @@ SELECT * FROM Vista_Detalle_Mantenimiento;
 
 -- -----------------------------------------------------------------------------------
 -- procedimiento almacenado
--- Procedimiento asignar 
+
+-- Insertar Cliente
 DELIMITER //
-CREATE PROCEDURE asignar_mantenimiento_coche_simple (
+CREATE PROCEDURE InsertarCliente (
+    IN p_Cedula VARCHAR(16),
+    IN p_Nombre VARCHAR(50),
+    IN p_Apellido VARCHAR(50),
+    IN p_Telefono VARCHAR(8),
+    IN p_Direccion TEXT,
+    IN p_Email VARCHAR(100),
+    IN p_Licencia VARCHAR(150)
+)
+BEGIN
+    INSERT INTO Cliente (Cedula, Nombre, Apellido, Telefono, Direccion, Email, Licencia)
+    VALUES (p_Cedula, p_Nombre, p_Apellido, p_Telefono, p_Direccion, p_Email, p_Licencia);
+END;
+//
+DELIMITER ;
+
+-- Llamar
+CALL InsertarCliente('001-100000-0001A', 'Juan', 'Pérez', '88889999', 'Managua', 'juan@example.com', 'LIC1234');
+
+
+-- Insertar Empleado
+DELIMITER //
+CREATE PROCEDURE InsertarEmpleado (
+    IN p_Cedula VARCHAR(16),
+    IN p_Nombre VARCHAR(150),
+    IN p_Apellido VARCHAR(150),
+    IN p_Direccion VARCHAR(150),
+    IN p_Email VARCHAR(150)
+)
+BEGIN
+    INSERT INTO Empleado (Cedula, Nombre, Apellido, Direccion, Email)
+    VALUES (p_Cedula, p_Nombre, p_Apellido, p_Direccion, p_Email);
+END;
+//
+DELIMITER ;
+
+-- Llamar
+CALL InsertarEmpleado('002-200000-0002B', 'Ana', 'López', 'León', 'ana@example.com');
+
+-- Insertar coche
+DELIMITER //
+CREATE PROCEDURE InsertarCoche (
+    IN p_Marca VARCHAR(50),
+    IN p_Modelo VARCHAR(50),
+    IN p_Anio INT,
+    IN p_Placa VARCHAR(150),
+    IN p_Color VARCHAR(150),
+    IN p_Fecha_Registro DATE,
+    IN p_Estado VARCHAR(50)
+)
+BEGIN
+    INSERT INTO Coche (Marca, Modelo, Anio, Placa, Color, Fecha_Registro, Estado)
+    VALUES (p_Marca, p_Modelo, p_Anio, p_Placa, p_Color, p_Fecha_Registro, p_Estado);
+END;
+//
+DELIMITER ;
+
+-- Llamar
+CALL InsertarCoche('Toyota', 'Yaris', 2020, 'M12345', 'Rojo', '2024-01-15', 'Disponible');
+
+
+-- Insertar detalle alquiler
+DELIMITER //
+CREATE PROCEDURE InsertarDetalleAlquiler(
+    IN p_Id_Alquiler INT,
+    IN p_Id_Coche INT,
+    IN p_Id_Cliente INT,
+    IN p_Precio_Total DECIMAL(10,2)
+)
+BEGIN
+    INSERT INTO Detalle_Alquiler(Id_Alquiler, Id_Coche, Id_Cliente, Precio_Total)
+    VALUES(p_Id_Alquiler, p_Id_Coche, p_Id_Cliente, p_Precio_Total);
+END;
+//
+DELIMITER ;
+
+CALL InsertarDetalleAlquiler(1, 2, 3, 450.00);
+
+-- Insertar detalle mantenimiento
+DELIMITER //
+CREATE PROCEDURE InsertarDetalleMantenimiento(
     IN p_Id_Mantenimiento INT,
     IN p_Id_Empleado INT,
-    IN p_Id_Coche INT
+    IN p_Id_Coche INT,
+    IN p_Observaciones TEXT
 )
 BEGIN
-    INSERT INTO Detalle_Mantenimiento (
-        Id_Mantenimiento,
-        Id_Empleado,
-        Id_Coche
-    )
-    VALUES (
-        p_Id_Mantenimiento,
-        p_Id_Empleado,
-        p_Id_Coche
-    );
-END //
+    INSERT INTO Detalle_Mantenimiento(Id_Mantenimiento, Id_Empleado, Id_Coche, Observaciones)
+    VALUES(p_Id_Mantenimiento, p_Id_Empleado, p_Id_Coche, p_Observaciones);
+END;
+//
 DELIMITER ;
 
-    CALL asignar_mantenimiento_coche_simple(5, 1, 3);
-    
--- Precedimiento de agregar cliente
+CALL InsertarDetalleMantenimiento(1, 2, 3, 'Cambio de aceite y revisión general');
+
+
+-- -------------------------------------------------------------------------------------
+
+-- Funciones
+-- Obtener nombre completo del cliente
 DELIMITER //
-CREATE PROCEDURE InsertarCliente(
-    IN p_Nombre VARCHAR(50),
-    IN p_Apellido VARCHAR(50),
-    IN p_Cedula VARCHAR(20),
-    IN p_Telefono VARCHAR(15),
-    IN p_Email VARCHAR(100),
-    IN p_Direccion VARCHAR(100)
-)
+CREATE FUNCTION ObtenerNombreCliente(p_Id INT)
+RETURNS VARCHAR(150)
+DETERMINISTIC
 BEGIN
-    INSERT INTO Cliente(Nombre, Apellido, Cedula, Telefono, Email, Direccion)
-    VALUES(p_Nombre, p_Apellido, p_Cedula, p_Telefono, p_Email, p_Direccion);
-END //
+    DECLARE nombreCompleto VARCHAR(150);
+    SELECT CONCAT(Nombre, ' ', Apellido) INTO nombreCompleto
+    FROM Cliente
+    WHERE Id_Cliente = p_Id;
+    RETURN nombreCompleto;
+END;
+//
 DELIMITER ;
 
-	CALL InsertarCliente("Armando", "Duarte", "121-885856-2111M", "58565232", "Duarte856@gmail.com", "Gallito");
-    
--- Procedimiento de agregar Empleado
+-- Llamar
+SELECT ObtenerNombreCliente(1);
+
+
+-- Obtener costo total de mantenimiento por coche
 DELIMITER //
-CREATE PROCEDURE InsertarEmpleado(
-    IN p_Nombre VARCHAR(50),
-    IN p_Apellido VARCHAR(50),
-    IN p_Cedula VARCHAR(20),
-    IN p_Email VARCHAR(100),
-    IN p_Direccion VARCHAR(100),
-    IN p_Cargo VARCHAR(50)
-)
+CREATE FUNCTION CostoMantenimientoPorCoche(p_IdCoche INT)
+RETURNS DECIMAL(10,2)
+DETERMINISTIC
 BEGIN
-    INSERT INTO Empleado(Nombre, Apellido, Cedula, Email, Direccion, Cargo)
-    VALUES(p_Nombre, p_Apellido, p_Cedula, p_Telefono, p_Email, p_Direccion, p_Cargo);
-END //
+    DECLARE total DECIMAL(10,2);
+    SELECT SUM(M.Costo) INTO total
+    FROM Mantenimiento M
+    INNER JOIN Detalle_Mantenimiento DM ON M.Id_Mantenimiento = DM.Id_Mantenimiento
+    WHERE DM.Id_Coche = p_IdCoche;
+    RETURN IFNULL(total, 0.00);
+END;
+//
 DELIMITER ;
 
-	CALL InsertarEmpleado ("Arturo", "Suniga", "123-365658-6952C", "Kilosrent@gmail.com", "La gallina culeca", "Empleado");
+-- Llamar
+SELECT CostoMantenimientoPorCoche(1);
 
-    
-    -- indicadores aplica conseptos de programacion en la base de datos
-    -- procedimientos almacenandos, funciones, o vistas
--- procedimientos almacenados minimo 5
--- minimo 4 porcedimientos almacenados(el scrud)
+-- Obtener el total de coches alquilador por cliente
+DELIMITER //
+CREATE FUNCTION TotalCochesPorCliente(p_Id_Cliente INT) 
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE total INT;
+    SELECT COUNT(*) INTO total
+    FROM Detalle_Alquiler
+    WHERE Id_Cliente = p_Id_Cliente;
+    RETURN total;
+END;
+//
+DELIMITER ;
 
+SELECT TotalCochesPorCliente(1);
+
+
+-- Verificar si un coche está disponible (estado = 'Disponible')
+DELIMITER //
+CREATE FUNCTION CocheDisponible(p_Id_Coche INT)
+RETURNS BOOLEAN
+DETERMINISTIC
+BEGIN
+    DECLARE disponible BOOLEAN;
+    SELECT Estado = 'Disponible' INTO disponible
+    FROM Coche
+    WHERE Id_Coche = p_Id_Coche;
+    RETURN disponible;
+END;
+//
+DELIMITER ;
+
+SELECT CocheDisponible(3);
+
+
+-- Calcular el número de mantenimientos realizados a un coche
+DELIMITER //
+CREATE FUNCTION TotalMantenimientosPorCoche(p_Id_Coche INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE total INT;
+    SELECT COUNT(*) INTO total
+    FROM Detalle_Mantenimiento
+    WHERE Id_Coche = p_Id_Coche;
+    RETURN total;
+END;
+//
+DELIMITER ;
+
+SELECT TotalMantenimientosPorCoche(3);

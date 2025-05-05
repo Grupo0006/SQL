@@ -76,6 +76,7 @@ CREATE TABLE Detalle_Mantenimiento (
     FOREIGN KEY (Id_Coche) REFERENCES Coche(Id_Coche)
 );
 
+-- -----------------------------------------------------------------------------------
 
 -- Insertar datos en la tabla Cliente
 INSERT INTO Cliente (Cedula, Nombre, Apellido, Telefono, Direccion, Email, Licencia) VALUES
@@ -101,30 +102,8 @@ INSERT INTO Cliente (Cedula, Nombre, Apellido, Telefono, Direccion, Email, Licen
 ('020-202020-0000T', 'Antonio', 'Gonzalez', '87898091', 'Calle del Bosque 654', 'antonio.gonzalez@email.com', 'LIC-003');
 
 
-INSERT INTO Cliente (Cedula, Nombre, Apellido, Telefono, Direccion, Email, Licencia) VALUES
-('122-121070-1200Q','Raul','Gallardo','85279012','Puente Buena Vida 500','robacelular@gmail.com','LIC-B1'),
-('123-122080-1301R','Laura','Martinez','85279013','Calle de la Paz 123','laura.martinez@email.com','LIC-A2'),
-('124-123090-1402S','Carlos','Lopez','85279014','Avenida Central 456','carlos.lopez@email.com','LIC-B3'),
-('125-124100-1503T','Ana','Perez','85279015','Calle 10 de Mayo 789','ana.perez@email.com','LIC-B1'),
-('126-125110-1604U','Luis','Rodriguez','85279016','Avenida Libertad 234','luis.rodriguez@email.com','LIC-C1'),
-('127-126120-1705V','Marta','Garcia','85279017','Calle del Sol 101','marta.garcia@email.com','LIC-A1'),
-('128-127130-1806W','Pedro','Sanchez','85279018','Calle Real 202','pedro.sanchez@email.com','LIC-B2'),
-('129-128140-1907X','Sofia','Fernandez','85279019','Avenida Buenos Aires 303','sofia.fernandez@email.com','LIC-B1'),
-('130-129150-2008Y','Javier','Diaz','85279020','Calle de las Flores 404','javier.diaz@email.com','LIC-C3'),
-('131-130160-2109Z','Eva','Morales','85279021','Calle de la Luna 505','eva.morales@email.com','LIC-A2'),
-('132-131170-2200A','Ricardo','Torres','85279022','Calle Independencia 606','ricardo.torres@email.com','LIC-B3'),
-('133-132180-2301B','Gabriela','Jimenez','85279023','Avenida del Sol 707','gabriela.jimenez@email.com','LIC-B1'),
-('134-133190-2402C','Jose','Gonzalez','85279024','Calle 9 de Julio 808','jose.gonzalez@email.com','LIC-A3'),
-('135-134200-2503D','Rosa','Castro','85279025','Calle del Bosque 909','rosa.castro@email.com','LIC-C1'),
-('136-135210-2604E','Hector','Mendez','85279026','Avenida San Juan 100','hector.mendez@email.com','LIC-B2'),
-('137-136220-2705F','Sandra','Ramirez','85279027','Calle de la Paz 111','sandra.ramirez@email.com','LIC-A1'),
-('138-137230-2806G','David','Hernandez','85279028','Avenida del Norte 222','david.hernandez@email.com','LIC-C3'),
-('139-138240-2907H','Carlos','Vazquez','85279029','Calle de las Avenidas 333','carlos.vazquez@email.com','LIC-B1'),
-('140-139250-3008I','Patricia','Salazar','85279030','Calle de la Victoria 444','patricia.salazar@email.com','LIC-A2'),
-('141-140260-3109J','Fernando','Cordero','85279031','Avenida Central 555','fernando.cordero@email.com','LIC-B3');
 
 -- Insertar datos en la tabla Empleados
--- Insertar datos en la tabla Empleados solo para Marcelo Martines y Luis Rodriguez
 INSERT INTO Empleado (Cedula, Nombre, Apellido, Direccion, Email) VALUES
 ('003-030303-0000C', 'Marcelo', 'Martines', 'De la carretera la manzana 1c sur llegando a chernovil', 'retbulljunior@gmail.com'),
 ('007-070707-0000G', 'Luis', 'Rodriguez', 'Avenida Las Américas 123', 'marta.rodriguez@email.com');
@@ -247,27 +226,103 @@ INSERT INTO Detalle_Mantenimiento (Id_Mantenimiento, Id_Empleado, Id_Coche, Obse
 (19, 2, 19, 'Motor con vibraciones', 'Revisar motor cada 12 meses', 'Motor, Suspensión'),
 (10, 2, 15, 'Excesivo consumo de combustible', 'Revisar sistema de inyección cada 6 meses', 'Inyectores, Filtro de combustible');
 
+-- ----------------------------------------------------------------------------------
 
+-- Visualizar
+
+-- Cliente
 SELECT * FROM Cliente;
-select * from Empleado;
+
+-- Empleado
+SELECT * FROM Empleado;
+
+-- Coche
 SELECT * FROM Coche;
+
+-- Alquiler
 SELECT * FROM Alquiler;
+
+-- Detalle_Alquiler
 SELECT * FROM Detalle_Alquiler;
+
+-- Mantenimiento
 SELECT * FROM Mantenimiento;
+
+-- Detalle_Mantenimiento
 SELECT * FROM Detalle_Mantenimiento;
 
--- modificar información en la tabla llamada Coche
-UPDATE Coche
-SET Estado = 'En mantenimiento'
+-- -------------------------------------------------------------------------------------
+
+-- Editar
+
+-- Cliente
+UPDATE Cliente 
+SET Nombre = 'NuevoNombre', Apellido = 'NuevoApellido' 
+WHERE Id_Cliente = 1;
+
+-- Empleado
+UPDATE Empleado 
+SET Email = 'nuevo.email@email.com', Direccion = 'Nueva Dirección' 
+WHERE Id_Empleado = 1;
+
+-- Coche
+UPDATE Coche 
+SET Estado = 'En Mantenimiento', Color = 'Azul Oscuro' 
 WHERE Id_Coche = 1;
 
---  Especifica que solo se eliminará la fila donde la columna Id_Cliente tenga el valor 3
-DELETE FROM Cliente
-WHERE Id_Cliente = 3;
+-- Alquiler
+UPDATE Alquiler 
+SET Fecha_Fin = '2024-04-15' 
+WHERE Id_Alquiler = 1;
 
---  Especifica que solo se eliminará la fila donde la columna Id_Empleado tenga el valor de 1
-delete from Empleado where Id_Empleado = 1;
+-- Detalle_Alquiler
+UPDATE Detalle_Alquiler 
+SET Precio_Total = 750.00 
+WHERE Id_Detalle_Alquiler = 1;
 
+-- Mantenimiento
+UPDATE Mantenimiento 
+SET Costo = 120.00, Justificacion = 'Cambio preventivo de aceite' 
+WHERE Id_Mantenimiento = 1;
+
+-- Detalle_Mantenimiento
+UPDATE Detalle_Mantenimiento 
+SET Observaciones = 'Revisado sin novedades' 
+WHERE Id_Detalle_Mantenimiento = 1;
+
+-- --------------------------------------------------------------------------------
+
+-- Eliminar
+
+-- Cliente
+DELETE FROM Cliente 
+WHERE Id_Cliente = 1;
+
+-- Empleado
+DELETE FROM Empleado 
+WHERE Id_Empleado = 1;
+
+-- Coche
+DELETE FROM Coche 
+WHERE Id_Coche = 1;
+
+-- Alquiler
+DELETE FROM Alquiler 
+WHERE Id_Alquiler = 1;
+
+-- Detalle_Alquiler
+DELETE FROM Detalle_Alquiler 
+WHERE Id_Detalle_Alquiler = 1;
+
+-- Mantenimiento
+DELETE FROM Mantenimiento 
+WHERE Id_Mantenimiento = 1;
+
+-- Detalle_Mantenimiento
+DELETE FROM Detalle_Mantenimiento 
+WHERE Id_Detalle_Mantenimiento = 1;
+
+-- ----------------------------------------------------------------------------------
 
 -- Reporte de alquileres 
 SELECT 
@@ -291,12 +346,12 @@ JOIN Coche co ON d.Id_Coche = co.Id_Coche;
 SELECT 
     m.Id_Mantenimiento, 
     m.Descripcion, 
-    m.Fecha_Inicio_Mantenimiento, 
-    m.Fecha_Fin_Mantenimiento, 
+    m.Fecha_Inicio, 
+    m.Fecha_Fin, 
     d.Observaciones, 
     d.Recomendaciones, 
     d.Partes_Cambiadas, 
-    e.Nombre_Empleado, 
+    e.Nombre, 
     e.Apellido, 
     co.Marca AS Coche_Marca, 
     co.Modelo AS Coche_Modelo
@@ -304,66 +359,10 @@ FROM Mantenimiento m
 LEFT JOIN Detalle_Mantenimiento d ON m.Id_Mantenimiento = d.Id_Mantenimiento
 LEFT JOIN Empleado e ON d.Id_Empleado = e.Id_Empleado
 LEFT JOIN Coche co ON d.Id_Coche = co.Id_Coche;
-
-
+    
+    
+-- Numeros de mantenimiento de un empleado
 SELECT 
-    A.Fecha_Inicio, 
-    A.Fecha_Fin, 
-    C.Nombre AS "Cliente", 
-    Co.Marca AS "Coche", 
-    Co.Modelo AS "Modelo", 
-    DA.Precio_Total 
-FROM 
-    Alquiler A
-JOIN 
-    Detalle_Alquiler DA ON A.Id_Alquiler = DA.Id_Alquiler
-JOIN 
-    Cliente C ON DA.Id_Cliente = C.Id_Cliente
-JOIN 
-    Coche Co ON DA.Id_Coche = Co.Id_Coche;
-    
-    
-    -- Informe de detalles
-    SELECT 
-    M.Descripcion, 
-    M.Justificacion, 
-    M.Fecha_Inicio_Mantenimiento, 
-    M.Fecha_Fin_Mantenimiento, 
-    M.Costo, 
-    E.Nombre_Empleado AS Empleado, 
-    C.Marca AS Coche, 
-    C.Modelo AS Modelo
-FROM 
-    Mantenimiento M
-JOIN 
-    Detalle_Mantenimiento DM ON M.Id_Mantenimiento = DM.Id_Mantenimiento
-JOIN 
-    Empleado E ON DM.Id_Empleado = E.Id_Empleado
-JOIN 
-    Coche C ON DM.Id_Coche = C.Id_Coche;
-    
-    
-    select Cedula, Nombre, Telefono
-    from Cliente
-    where APellido = 'Perez';
-    
-    
-    select Cedula, Nombre, Apellido
-    from Empleado
-    Where Id_Empleado = 1;
-    
-    
-      select Cedula,Nombre, Apellido
-    from Empleado
-    Where Id_Empleado = 2;
-    
-    
-          select Cedula, Apellido,  Nombre
-    from Empleado
-    Where Id_Empleado = 3;
-    
-    
-    SELECT 
     E.Nombre,
     E.Apellido,
     COUNT(DM.Id_Coche) AS Total_Coches_Reparados
@@ -372,6 +371,8 @@ JOIN Empleado E ON DM.Id_Empleado = E.Id_Empleado
 GROUP BY E.Id_Empleado
 ORDER BY Total_Coches_Reparados DESC
 LIMIT 1;
+
+-- ----------------------------------------------------------------------------------
 
 -- vistas de Empleados
 CREATE VIEW Vista_Empleado_Mayor_Reparador AS
@@ -410,10 +411,78 @@ FROM
 select * from Vista_Vehiculos_Estado;
 
 
+-- Vista Cliente
+CREATE VIEW Vista_Cliente AS
+SELECT 
+    Id_Cliente,
+    Nombre,
+    Apellido,
+    Cedula,
+    Telefono,
+    Email,
+    Direccion
+FROM Cliente;
+
+select * from Vista_Cliente;
+
+-- Vista Alquiler
+CREATE VIEW Vista_Alquiler AS
+SELECT 
+    A.Id_Alquiler,
+    A.Fecha_Inicio,
+    A.Fecha_Fin
+FROM Alquiler A;
+
+SELECT * FROM Vista_Alquiler;
+
+
+-- Vista Detalle Alquiler
+CREATE VIEW Vista_Detalle_Alquiler AS
+SELECT 
+    DA.Id_Detalle_Alquiler,
+    DA.Id_Alquiler,
+    DA.Id_Coche,
+    C.Marca AS Marca_Coche,
+    C.Modelo AS Modelo_Coche,
+    DA.Precio_Total
+FROM Detalle_Alquiler DA
+JOIN Coche C ON DA.Id_Coche = C.Id_Coche;
+
+SELECT * FROM Vista_Detalle_Alquiler;
+
+
+-- Vista Mantenimiento
+CREATE VIEW Vista_Mantenimiento AS
+SELECT 
+    M.Id_Mantenimiento,
+    M.Costo,
+    M.Justificacion,
+    M.Descripcion,
+    M.Fecha_Inicio,
+    M.Fecha_Fin
+FROM Mantenimiento M;
+
+SELECT * FROM Vista_Mantenimiento;
+
+-- Vista Detalle Mantenimiento
+CREATE VIEW Vista_Detalle_Mantenimiento AS
+SELECT 
+    DM.Id_Detalle_Mantenimiento,
+    DM.Id_Mantenimiento,
+    DM.Id_Empleado,
+    DM.Id_Coche,
+    DM.Observaciones,
+    DM.Recomendaciones,
+    DM.Partes_Cambiadas
+FROM Detalle_Mantenimiento DM
+JOIN Mantenimiento M ON DM.Id_Mantenimiento = M.Id_Mantenimiento;
+
+SELECT * FROM Vista_Detalle_Mantenimiento;
+
+-- -----------------------------------------------------------------------------------
 -- procedimiento almacenado
-
+-- Procedimiento asignar 
 DELIMITER //
-
 CREATE PROCEDURE asignar_mantenimiento_coche_simple (
     IN p_Id_Mantenimiento INT,
     IN p_Id_Empleado INT,
@@ -431,12 +500,45 @@ BEGIN
         p_Id_Coche
     );
 END //
-
 DELIMITER ;
-
 
     CALL asignar_mantenimiento_coche_simple(5, 1, 3);
     
+-- Precedimiento de agregar cliente
+DELIMITER //
+CREATE PROCEDURE InsertarCliente(
+    IN p_Nombre VARCHAR(50),
+    IN p_Apellido VARCHAR(50),
+    IN p_Cedula VARCHAR(20),
+    IN p_Telefono VARCHAR(15),
+    IN p_Email VARCHAR(100),
+    IN p_Direccion VARCHAR(100)
+)
+BEGIN
+    INSERT INTO Cliente(Nombre, Apellido, Cedula, Telefono, Email, Direccion)
+    VALUES(p_Nombre, p_Apellido, p_Cedula, p_Telefono, p_Email, p_Direccion);
+END //
+DELIMITER ;
+
+	CALL InsertarCliente("Armando", "Duarte", "121-885856-2111M", "58565232", "Duarte856@gmail.com", "Gallito");
+    
+-- Procedimiento de agregar Empleado
+DELIMITER //
+CREATE PROCEDURE InsertarEmpleado(
+    IN p_Nombre VARCHAR(50),
+    IN p_Apellido VARCHAR(50),
+    IN p_Cedula VARCHAR(20),
+    IN p_Email VARCHAR(100),
+    IN p_Direccion VARCHAR(100),
+    IN p_Cargo VARCHAR(50)
+)
+BEGIN
+    INSERT INTO Empleado(Nombre, Apellido, Cedula, Email, Direccion, Cargo)
+    VALUES(p_Nombre, p_Apellido, p_Cedula, p_Telefono, p_Email, p_Direccion, p_Cargo);
+END //
+DELIMITER ;
+
+	CALL InsertarEmpleado ("Arturo", "Suniga", "123-365658-6952C", "Kilosrent@gmail.com", "La gallina culeca", "Empleado");
 
     
     -- indicadores aplica conseptos de programacion en la base de datos
